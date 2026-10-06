@@ -1,10 +1,12 @@
 # Two-Site Segmented Network Lab (Cisco Packet Tracer)
 
-> **Status: in progress.** Configs are complete; screenshots, the `.pkt` file, and build notes are still being added.
+> **Status: in progress.** Configs and screenshots are in; the `.pkt` file and build notes are still being added.
 
 A small enterprise network built to practice CCNA skills: VLAN segmentation, router-on-a-stick inter-VLAN routing, per-subnet DHCP, OSPF between two sites, extended ACLs that enforce a security policy, SSH-only device management, and switch port hardening.
 
 ## Topology
+
+![Packet Tracer topology](screenshots/01-topology.png)
 
 ```mermaid
 graph LR
@@ -83,7 +85,25 @@ The ACLs are stateless, so STAFF_IN and GUEST_IN let `echo-reply` and TCP `estab
 | Staff PC | `ssh -l admin 192.168.10.1` | Refused (MGMT_ONLY) |
 | Branch PC | Browser → `intranet.lab` | Page loads |
 
-Use **Simulation mode** to watch a blocked packet die at R1's subinterface, and screenshot it for the repo.
+Use **Simulation mode** to watch a blocked packet die at R1's subinterface.
+
+## Results
+
+| Staff web access allowed | Staff ping to IT server blocked |
+|---|---|
+| ![Staff PC loads intranet.lab](screenshots/02-staff-web-allowed.png) | ![Staff ping to 192.168.20.10 fails](screenshots/06-staff-ping-blocked.png) |
+
+**Guest packet dropped at R1 (Simulation mode)**
+
+![Guest packet blocked at R1](screenshots/05-guest-blocked.png)
+
+**ACL hit counters on R1** (`show access-lists STAFF_IN`)
+
+![STAFF_IN match counts](screenshots/03-acl-hit-counts.png)
+
+**OSPF adjacency and learned routes on R2**
+
+![OSPF neighbor FULL and OSPF routes](screenshots/04-ospf-neighbors.png)
 
 ## Break/fix exercises (interview practice)
 
@@ -99,7 +119,7 @@ Break one thing at a time, find the cause using only `show` commands, then fix i
 
 - [ ] `lab.pkt`: the saved Packet Tracer file
 - [x] `configs/`: device configs (R1, R2, SW1, SW2)
-- [ ] `screenshots/`: topology, a passing test, a blocked packet in Simulation mode, OSPF neighbors (see `screenshots/README.md`)
+- [x] `screenshots/`: topology, passing and blocked policy tests, Simulation-mode drop, ACL counters, OSPF neighbors (see `screenshots/README.md`)
 - [ ] `NOTES.md`: build log, what broke and how I fixed it, break/fix results
 
 ## Phase 2 (planned)
