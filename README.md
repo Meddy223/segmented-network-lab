@@ -1,6 +1,6 @@
 # Two-Site Segmented Network Lab (Cisco Packet Tracer)
 
-> **Status: in progress.** Configs and screenshots are in; the `.pkt` file and build notes are still being added.
+Configs and screenshots are in; the `.pkt` file and build notes are still being added.
 
 A small enterprise network built to practice CCNA skills: VLAN segmentation, router-on-a-stick inter-VLAN routing, per-subnet DHCP, OSPF between two sites, extended ACLs that enforce a security policy, SSH-only device management, and switch port hardening.
 
