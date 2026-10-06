@@ -1,0 +1,53 @@
+! ===== SW2 (Branch access switch, 2960) =====
+enable
+configure terminal
+hostname SW2
+no ip domain-lookup
+ip domain-name lab.local
+service password-encryption
+enable secret ChangeMe!23
+username admin privilege 15 secret ChangeMe!23
+banner motd # Authorized access only #
+
+vlan 40
+ name BRANCH
+vlan 998
+ name PARKING
+
+interface range fa0/1 - 10
+ switchport mode access
+ switchport access vlan 40
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+interface gi0/1
+ description Uplink to R2
+ switchport mode access
+ switchport access vlan 40
+interface range fa0/11 - 24, gi0/2
+ switchport mode access
+ switchport access vlan 998
+ shutdown
+
+! --- Management (R2's LAN is untagged, so the SVI lives in VLAN 40) ---
+interface vlan 40
+ ip address 192.168.40.2 255.255.255.0
+ no shutdown
+ip default-gateway 192.168.40.1
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+ip access-list standard MGMT_ONLY
+ permit 192.168.20.0 0.0.0.255
+line vty 0 15
+ access-class MGMT_ONLY in
+ transport input ssh
+ login local
+line con 0
+ login local
+ logging synchronous
+ exec-timeout 10 0
+end
+copy running-config startup-config
